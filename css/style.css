@@ -1,0 +1,10 @@
+.error
+{
+    color:rgb(252, 105, 105);
+}
+
+input[type=text] {
+    width: 45%;
+    margin: 8px 0;
+    box-sizing: border-box;
+}
