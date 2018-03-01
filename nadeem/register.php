@@ -1,6 +1,10 @@
 <?php
-    require('includes/connect.php');
-?>
+    use PHPMailer\PHPMailer\PHPMailer;
+use PHPMailer\PHPMailer\Exception;
+
+require('includes/connect.php');
+
+    ?>
 <!DOCTYPE html>
 <html>
 <head>
@@ -15,145 +19,149 @@
 
     function save_state($a)
     {
-        if($_SERVER['REQUEST_METHOD']== "POST")
-        {
+        if ($_SERVER['REQUEST_METHOD']== "POST") {
             @$b = $_POST['$a'];
             echo $_POST[$a];
         }
     }
 
-    if($_SERVER['REQUEST_METHOD']=="POST")
-    {
+    if ($_SERVER['REQUEST_METHOD']=="POST") {
         $error_arr = array();
         //Last Name
         $lname_cc = trim($_POST['txtlname']);
         //Empty Validation
-        if(empty($lname_cc))
-        {
+        if (empty($lname_cc)) {
             $error[] = "Please Enter your Last Name";
-        }
-        else
-        {
+        } else {
             $lname = mysqli_real_escape_string($dbc, $lname_cc);
         }
-    /*-----------------------------------------------------------------*/
+        /*-----------------------------------------------------------------*/
         //First Name
         $fname_cc = trim($_POST['txtfname']);
         //Empty Validation
-        if(empty($fname_cc))
-        {
-        $error[]= "Please Enter your First Name";
-        }
-        else
-        {
+        if (empty($fname_cc)) {
+            $error[]= "Please Enter your First Name";
+        } else {
             $fname = mysqli_real_escape_string($dbc, $fname_cc);
         }
-    /*-----------------------------------------------------------------*/
-    //Country
-    $country_cc = $_POST['sltcountry'];
-    $country = mysqli_real_escape_string($dbc, $country_cc);
-    /*-----------------------------------------------------------------*/
-    //Address
-    $address_cc = trim($_POST['txtaddress']);
-    //Empty Valdation
-    if(empty($address_cc))
-    {
-    $error[] = "Please Enter your Address";
-    }
-    else
-        {
+        /*-----------------------------------------------------------------*/
+        //Country
+        $country_cc = $_POST['sltcountry'];
+        $country = mysqli_real_escape_string($dbc, $country_cc);
+        /*-----------------------------------------------------------------*/
+        //Address
+        $address_cc = trim($_POST['txtaddress']);
+        //Empty Valdation
+        if (empty($address_cc)) {
+            $error[] = "Please Enter your Address";
+        } else {
             $address = mysqli_real_escape_string($dbc, $address_cc);
         }
-    /*-----------------------------------------------------------------*/
-    //Postal Code
-    $pcode_cc = trim($_POST['txtpostalcode']);
-    if(empty($pcode_cc))
-    {
-    $error[]="Please Enter your Postal Code";
-    }
-    else
-        {
+        /*-----------------------------------------------------------------*/
+        //Postal Code
+        $pcode_cc = trim($_POST['txtpostalcode']);
+        if (empty($pcode_cc)) {
+            $error[]="Please Enter your Postal Code";
+        } else {
             $pcode = mysqli_real_escape_string($dbc, $pcode_cc);
         }
-    /*-----------------------------------------------------------------*/
-    //Email
-    $email_cc = trim($_POST['txtemail']);
-    if(empty($email_cc))
-    {
-    $error[] = "Please Enter your E-mail Address";
-    }
-    else
-        {
+        /*-----------------------------------------------------------------*/
+        //Email
+        $email_cc = trim($_POST['txtemail']);
+        if (empty($email_cc)) {
+            $error[] = "Please Enter your E-mail Address";
+        } else {
             $email = mysqli_real_escape_string($dbc, $email_cc);
         }
-    /*-----------------------------------------------------------------*/
-    //username
-    $uname_cc = trim($_POST['txtusername']);
-    //Empty Validation
-    if(empty($uname_cc))
-    {
-    $error[]="Please Enter your username";
-    }
-    else
-    {
-        $uname = mysqli_real_escape_string($dbc, $uname_cc);
-    }
-    /*-----------------------------------------------------------------*/
-    //Check for Password
-    $password_c = trim($_POST['txtpassword']);
-    if(empty($password_c))
-    {
-        $error[] = "Please fill out Password field";
-    }
-    elseif(strlen($password_c) < 8)
-    {
-        $error[] = "Password is too short (should be greater than 8 characters)";
-    }
-    elseif(strlen($password_c) > 20)
-    {
-        $error[] = "Password is too Long (should not be larger than 20 characters)";
-    }
-    elseif(!preg_match("#[a-z]+#", $password_c))
-    {
-        $error[]= "Password must include at least one short letter!";
-    }
-    elseif( !preg_match("#[A-Z]+#", $password_c) )
-    {
-        $error[]= "Password must include at least one CAPS!";
-    }
-/*-----------------------------------------------------------------*/
-//Confirm Password
-    $pc_c = trim($_POST['txtcpassword']);
-if(empty($pc_c))
-    {
-    $error[] = "Please fill out Confirm Password field";
-    }
+        /*-----------------------------------------------------------------*/
+        //username
+        $uname_cc = trim($_POST['txtusername']);
+        //Empty Validation
+        if (empty($uname_cc)) {
+            $error[]="Please Enter your username";
+        } else {
+            $uname = mysqli_real_escape_string($dbc, $uname_cc);
+        }
+        /*-----------------------------------------------------------------*/
+        //Check for Password
+        $password_c = trim($_POST['txtpassword']);
+        if (empty($password_c)) {
+            $error[] = "Please fill out Password field";
+        } elseif (strlen($password_c) < 8) {
+            $error[] = "Password is too short (should be greater than 8 characters)";
+        } elseif (strlen($password_c) > 20) {
+            $error[] = "Password is too Long (should not be larger than 20 characters)";
+        } elseif (!preg_match("#[a-z]+#", $password_c)) {
+            $error[]= "Password must include at least one short letter!";
+        } elseif (!preg_match("#[A-Z]+#", $password_c)) {
+            $error[]= "Password must include at least one CAPS!";
+        }
+        /*-----------------------------------------------------------------*/
+        //Confirm Password
+        $pc_c = trim($_POST['txtcpassword']);
+        if (empty($pc_c)) {
+            $error[] = "Please fill out Confirm Password field";
+        }
 
-if(@$password_c != $pc_c)
-{
-$error[] = "Passwords not the same, Retry!";
-}
-else
-{
-    $password = mysqli_real_escape_string($dbc, $pc_c);
-}
+        if (@$password_c != $pc_c) {
+            $error[] = "Passwords not the same, Retry!";
+        } else {
+            $pc_e = md5($pc_c);
+            $password = mysqli_real_escape_string($dbc, $pc_e);
+        }
 
-/*-----------------------------------------------------------------*/
-if(empty($error))
-{
-    echo "Good to go";
-}
-else
-{
-    echo "<h1>&#9940; Error!</h1><p style='font-weight:bold;'>The following error(s) occurred:</p>";
-        foreach ($error as $msg)
-            { // Print each error.
+        /*-----------------------------------------------------------------*/
+        if (empty($error)) {
+            //Generated token
+            $token = "qwertyuiopasdfghjklzxcvbnmQWERTYUIOPASDFGHJKLZXCVBNM123456789!$/()*";
+            $token = str_shuffle($token);
+            $token = substr($token, 0, 10);
+
+            $register_query = "INSERT INTO tbl_user(l_name, f_name, country, address, postal_code, e_mail, username, password, isEmailConfirmed, token) VALUES('$lname', '$fname', '$country', '$address', '$pcode', '$email', '$uname','$password', '0', '$token');";
+            $register_query_run = mysqli_query($dbc, $register_query);
+
+            if ($register_query_run) {
+                include_once("phpMailer/PHPMailer.php");
+                include_once("phpMailer/Exception.php");
+                include_once("phpMailer/SMTP.php");
+                $mail = new PHPMailer();
+                //$mail->SMTPDebug = 2;                                 // Enable verbose debug output
+            $mail->isSMTP();                                      // Set mailer to use SMTP
+            $mail->Host = 'smtp.gmail.com;';                    // Specify main and backup SMTP servers
+            $mail->SMTPAuth = true;                               // Enable SMTP authentication
+            $mail->SMTPSecure = false;
+                $mail->Username = 'testappui357@gmail.com';                 // SMTP username
+            $mail->Password = 'qwert1234';                           // SMTP password
+            //$mail->SMTPSecure = 'tls';                            // Enable TLS encryption, `ssl` also accepted
+            $mail->Port = 25;
+                $mail->setFrom('testappui357@gmail.com', 'Nadda');
+                $mail->addAddress('nadeemshb_12@hotmail.com', 'Nad User');
+                $mail->isHTML(true);                                  // Set email format to HTML
+                $mail->Subject = 'Here is the subject';
+                $mail->Body    = "
+                Please Click on the link below: <br><br>
+                <a href=\"http://localhost:8001/dissertation_scratch/tds/nadeem/emailVerified.php?email=$email&token=$token\">Click Here</a>
+            ";
+
+
+                if ($mail->send()) {
+                    echo "You have been registered. Please check your E-mail to activate your account.";
+                } else {
+                    echo $mail->ErrorInfo;
+                }
+                //header('Location: register.php');
+            } else {
+                echo "qry not run";
+            }
+        } else {
+            echo "<h1>&#9940; Error!</h1><p style='font-weight:bold;'>The following error(s) occurred:</p>";
+            foreach ($error as $msg) { // Print each error.
                 echo " - <span class='error'>$msg</span><br />\n";
             }
             echo "<br /><p class='error'>Please try again.</p><p><br />";
-}
-
+        }
     }
+
 ?>
 <body>
     <h1>Registration Page</h1>
@@ -531,12 +539,10 @@ else
                 </td>
             </tr>
             <?php
-            if($_SERVER['REQUEST_METHOD']=="post")
-            {
+            if ($_SERVER['REQUEST_METHOD']=="post") {
                 $cpass = trim($_POST['txtcpassword']);
                 echo "<script>alert('".$cpass."');</script>";
-                if($cpass != $password_cc)
-                {
+                if ($cpass != $password_cc) {
                     echo "<span class='error'>Password and Confirm password not similar, Try again!</span>";
                     $error = "true";
                 }
