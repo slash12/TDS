@@ -1,3 +1,6 @@
+<?php 
+    require('includes/connect.php');
+?>
 <!DOCTYPE html>
 <html>
 <head>
@@ -7,6 +10,150 @@
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <link rel="stylesheet" type="text/css" media="screen" href="css/style.css" />
 </head>
+<?php 
+
+    function save_state($a)
+    {
+        if($_SERVER['REQUEST_METHOD']== "POST")
+        {
+            @$b = $_POST['$a'];
+            echo $_POST[$a]; 
+        }
+    }
+
+    if($_SERVER['REQUEST_METHOD']=="POST")
+    {
+        $error_arr = array();
+        //Last Name
+        $lname_cc = trim($_POST['txtlname']);
+        //Empty Validation
+        if(empty($lname_cc))
+        {
+            $error[] = "Please Enter your Last Name";
+        }
+        else
+        {
+            $lname = mysqli_real_escape_string($dbc, $lname_cc);
+        }
+    /*-----------------------------------------------------------------*/
+        //First Name
+        $fname_cc = trim($_POST['txtfname']);
+        //Empty Validation
+        if(empty($fname_cc))
+        {
+        $error[]= "Please Enter your First Name";
+        }
+        else
+        {
+            $fname = mysqli_real_escape_string($dbc, $fname_cc);
+        }
+    /*-----------------------------------------------------------------*/
+    //Country
+    $country_cc = $_POST['sltcountry'];
+    $country = mysqli_real_escape_string($dbc, $country_cc);
+    /*-----------------------------------------------------------------*/
+    //Address
+    $address_cc = trim($_POST['txtaddress']);
+    //Empty Valdation
+    if(empty($address_cc))
+    {
+    $error[] = "Please Enter your Address";
+    }
+    else
+        {
+            $address = mysqli_real_escape_string($dbc, $address_cc);
+        }
+    /*-----------------------------------------------------------------*/
+    //Postal Code
+    $pcode_cc = trim($_POST['txtpostalcode']);
+    if(empty($pcode_cc))
+    {
+    $error[]="Please Enter your Postal Code";
+    }
+    else
+        {
+            $pcode = mysqli_real_escape_string($dbc, $pcode_cc);
+        }
+    /*-----------------------------------------------------------------*/
+    //Email
+    $email_cc = trim($_POST['txtemail']);
+    if(empty($email_cc))
+    {
+    $error[] = "Please Enter your E-mail Address";
+    }
+    else
+        {
+            $email = mysqli_real_escape_string($dbc, $email_cc);
+        }
+    /*-----------------------------------------------------------------*/
+    //username
+    $uname_cc = trim($_POST['txtusername']);
+    //Empty Validation
+    if(empty($uname_cc))
+    {
+    $error[]="Please Enter your username";
+    }
+    else
+    {
+        $uname = mysqli_real_escape_string($dbc, $uname_cc);
+    }
+    /*-----------------------------------------------------------------*/
+    //Check for Password
+    $password_c = trim($_POST['txtpassword']);
+    if(empty($password_c))
+    {
+        $error[] = "Please fill out Password field";
+    }
+    elseif(strlen($password_c) < 8)
+    {
+        $error[] = "Password is too short (should be greater than 8 characters)";
+    }
+    elseif(strlen($password_c) > 20)
+    {
+        $error[] = "Password is too Long (should not be larger than 20 characters)";
+    }
+    elseif(!preg_match("#[a-z]+#", $password_c)) 
+    {
+        $error[]= "Password must include at least one short letter!";
+    }
+    elseif( !preg_match("#[A-Z]+#", $password_c) ) 
+    {
+        $error[]= "Password must include at least one CAPS!";
+    }
+/*-----------------------------------------------------------------*/
+//Confirm Password
+    $pc_c = trim($_POST['txtcpassword']);
+if(empty($pc_c))
+    {
+    $error[] = "Please fill out Confirm Password field";
+    }
+
+if(@$password_c != $pc_c)
+{
+$error[] = "Passwords not the same, Retry!";
+}
+else
+{
+    $password = mysqli_real_escape_string($dbc, $pc_c);
+}
+    
+/*-----------------------------------------------------------------*/
+if(empty($error))
+{
+    echo "Good to go";
+}
+else
+{
+    echo "<h1>&#9940; Error!</h1><p style='font-weight:bold;'>The following error(s) occurred:</p>";
+        foreach ($error as $msg) 
+            { // Print each error.
+                echo " - <span class='error'>$msg</span><br />\n";
+            }
+            echo "<br /><p class='error'>Please try again.</p><p><br />";
+}
+
+    }
+?>
 <body>
     <h1>Registration Page</h1>
     <form action="<?php $_SERVER['PHP_SELF'];?>" method="post">
@@ -16,17 +163,7 @@
                     Last Name
                 </td>
                 <td>
-                    <input type="text" name="txtlname" id="txtlname" />
-                    <?php
-                        if($_SERVER['REQUEST_METHOD'] =='POST')
-                        {
-                            $lname_cc = trim($_POST['txtlname']);
-                            if(empty($lname_cc))
-                            {
-                                echo "<span class='error'>Please enter your Last Name</span>";
-                            }
-                        }
-                    ?>
+                    <input type="text" name="txtlname" id="txtlname" value="<?php save_state('txtlname'); ?>"/>
                 </td>
             </tr>
             <tr>
@@ -34,17 +171,7 @@
                     First Name
                 </td>
                 <td>
-                    <input type="text" name="txtfname" id="txtfname" />
-                    <?php
-                        if($_SERVER['REQUEST_METHOD'] =='POST')
-                        {
-                            $lname_cc = trim($_POST['txtfname']);
-                            if(empty($lname_cc))
-                            {
-                                echo "<span class='error'>Please enter your First Name</span>";
-                            }
-                        }
-                    ?>
+                    <input type="text" name="txtfname" id="txtfname" value="<?php save_state('txtfname'); ?>"/>
                 </td>
             </tr>
             <tr>
@@ -300,17 +427,7 @@
                     Address
                 </td>
                 <td>
-                    <input type="text" name="txtaddress" id="txtaddress" />
-                    <?php
-                        if($_SERVER['REQUEST_METHOD'] =='POST')
-                        {
-                            $lname_cc = trim($_POST['txtaddress']);
-                            if(empty($lname_cc))
-                            {
-                                echo "<span class='error'>Please enter your Address</span>";
-                            }
-                        }
-                    ?>
+                    <input type="text" name="txtaddress" id="txtaddress" value="<?php save_state('txtaddress'); ?>"/>
                 </td>
             </tr>
             <tr>
@@ -318,35 +435,44 @@
                     Postal Code
                 </td>
                 <td>
-                    <input type="text" name="txtpostalcode" id="txtpostalcode" />
-                    <?php
-                        if($_SERVER['REQUEST_METHOD'] =='POST')
-                        {
-                            $lname_cc = trim($_POST['txtpostalcode']);
-                            if(empty($lname_cc))
-                            {
-                                echo "<span class='error'>Please enter a Postal Code</span>";
-                            }
-                        }
-                    ?>
+                    <input type="text" name="txtpostalcode" id="txtpostalcode" value="<?php save_state('txtpostalcode'); ?>"/>
                 </td>
             </tr>
+             <!-- E-mail -->
+             <script>
+                //Check if email already exist
+                function chckEmail(value)
+                {
+                $.ajax({
+                type:"POST",
+                url:"checkEmail.php",
+                data:"txtemail="+value,
+                success:function(data)
+                {
+                if(data == "false")
+                {
+                document.getElementById('msg1').innerHTML = "<span class='error'>&#9888; Email Already Existed</span>";
+                document.getElementById('btnsubmit').classList.add("disabled");
+                document.getElementById('txtemail').style.border="1px solid #FF0000";
+                
+                }
+                if(data == "true")
+                {
+                document.getElementById('msg1').innerHTML = "<span style='color:green;'>Valid E-mail Address</span><i class='material-icons' style='color:green;'>done</i>";
+                document.getElementById('btnregissub').classList.remove("disabled");
+                document.getElementById('txtemail').style.borderBottom="";
+                document.getElementById('txtemail').style.boxShadow="";
+                }
+                }
+                });
+                }
+                    </script>
             <tr>
                 <td>
                     Email
                 </td>
                 <td>
-                    <input type="email" name="txtemail" id="txtemail" />
-                    <?php
-                        if($_SERVER['REQUEST_METHOD'] =='POST')
-                        {
-                            $lname_cc = trim($_POST['txtemail']);
-                            if(empty($lname_cc))
-                            {
-                                echo "<span class='error'>Please Enter your Email Address</span>";
-                            }
-                        }
-                    ?>
+                    <input type="email" name="txtemail" id="txtemail" value="<?php save_state('txtemail'); ?>"/>
                 </td>
             </tr>
             <tr>
@@ -354,17 +480,7 @@
                     Username
                 </td>
                 <td>
-                    <input type="text" name="txtusername" id="txtusername" />
-                    <?php
-                        if($_SERVER['REQUEST_METHOD'] =='POST')
-                        {
-                            $lname_cc = trim($_POST['txtusername']);
-                            if(empty($lname_cc))
-                            {
-                                echo "<span class='error'>Please enter a Username</span>";
-                            }
-                        }
-                    ?>
+                    <input type="text" name="txtusername" id="txtusername" value="<?php save_state('txtusername'); ?>"/>
                 </td>
             </tr>
             <tr>
@@ -373,16 +489,6 @@
                 </td>
                 <td>
                     <input type="password" name="txtpassword" id="txtpassword" />
-                    <?php
-                        if($_SERVER['REQUEST_METHOD'] =='POST')
-                        {
-                            $lname_cc = trim($_POST['txtlname']);
-                            if(empty($lname_cc))
-                            {
-                                echo "<span class='error'>Please enter a password</span>";
-                            }
-                        }
-                    ?>
                 </td>
             </tr>
             <tr>
@@ -393,11 +499,29 @@
                     <input type="password" name="txtcpassword" id="txtcpassword" />
                 </td>
             </tr>
+            <?php 
+            if($_SERVER['REQUEST_METHOD']=="post")
+            {
+                $cpass = trim($_POST['txtcpassword']);
+                echo "<script>alert('".$cpass."');</script>";
+                if($cpass != $password_cc)
+                {
+                    echo "<span class='error'>Password and Confirm password not similar, Try again!</span>";
+                    $error = "true";
+                }
+            }
+            ?>
             <tr>
                 <td>
                     <input type="Submit" name="btnsubmit" id="btnsubmit" />
                 </td>
             </tr>
+            <?php 
+            // if(empty($error))
+            // {
+            //     echo "<script>alert('1');</script>";
+            // }
+            ?>
         </table>
     </form>
 </body>
