@@ -3,8 +3,45 @@
     color:rgb(252, 105, 105);
 }
 
-input[type=text] {
-    width: 45%;
-    margin: 8px 0;
-    box-sizing: border-box;
+input[type=text], select, input[type=email], input[type="password"] {
+    width: 100%;
+    padding: 12px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    resize: vertical;
+}
+input[type=submit]
+ {
+    border: 3px solid #555;
+    background-color: #4CAF50;
+    border: none;
+    color: white;
+    padding: 15px 32px;
+    text-align: center;
+    text-decoration: none;
+    cursor: pointer;
+    transition-duration: 0.4s;
+}
+
+#btnsubmit
+{
+  margin-right: 10px;
+}
+
+input[type=reset]
+ {
+    border: 3px solid #555;
+    background-color: #e7e7e7;
+    border: none;
+    color: black;
+    padding: 15px 32px;
+    text-align: center;
+    text-decoration: none;
+    cursor: pointer;
+    transition-duration: 0.4s;
+}
+
+input[type=submit]:hover, input[type=reset]:hover
+{
+    box-shadow: 0 8px 16px 0 rgba(0,0,0,0.2), 0 6px 20px 0 rgba(0,0,0,0.19);
 }

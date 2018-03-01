@@ -1,4 +1,4 @@
-<?php 
+<?php
     require('includes/connect.php');
 ?>
 <!DOCTYPE html>
@@ -9,15 +9,16 @@
     <title>Registration Page</title>
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <link rel="stylesheet" type="text/css" media="screen" href="css/style.css" />
+    <script src="js/jquery.min.js"></script>
 </head>
-<?php 
+<?php
 
     function save_state($a)
     {
         if($_SERVER['REQUEST_METHOD']== "POST")
         {
             @$b = $_POST['$a'];
-            echo $_POST[$a]; 
+            echo $_POST[$a];
         }
     }
 
@@ -112,11 +113,11 @@
     {
         $error[] = "Password is too Long (should not be larger than 20 characters)";
     }
-    elseif(!preg_match("#[a-z]+#", $password_c)) 
+    elseif(!preg_match("#[a-z]+#", $password_c))
     {
         $error[]= "Password must include at least one short letter!";
     }
-    elseif( !preg_match("#[A-Z]+#", $password_c) ) 
+    elseif( !preg_match("#[A-Z]+#", $password_c) )
     {
         $error[]= "Password must include at least one CAPS!";
     }
@@ -136,7 +137,7 @@ else
 {
     $password = mysqli_real_escape_string($dbc, $pc_c);
 }
-    
+
 /*-----------------------------------------------------------------*/
 if(empty($error))
 {
@@ -145,7 +146,7 @@ if(empty($error))
 else
 {
     echo "<h1>&#9940; Error!</h1><p style='font-weight:bold;'>The following error(s) occurred:</p>";
-        foreach ($error as $msg) 
+        foreach ($error as $msg)
             { // Print each error.
                 echo " - <span class='error'>$msg</span><br />\n";
             }
@@ -452,16 +453,15 @@ else
                 if(data == "false")
                 {
                 document.getElementById('msg1').innerHTML = "<span class='error'>&#9888; Email Already Existed</span>";
-                document.getElementById('btnsubmit').classList.add("disabled");
+                document.getElementById("btnsubmit").disabled = true;
                 document.getElementById('txtemail').style.border="1px solid #FF0000";
-                
+
                 }
                 if(data == "true")
                 {
-                document.getElementById('msg1').innerHTML = "<span style='color:green;'>Valid E-mail Address</span><i class='material-icons' style='color:green;'>done</i>";
-                document.getElementById('btnregissub').classList.remove("disabled");
-                document.getElementById('txtemail').style.borderBottom="";
-                document.getElementById('txtemail').style.boxShadow="";
+                document.getElementById('msg1').innerHTML = "<span style='color:green;'> &#x2611; Valid E-mail Address</span>";
+                document.getElementById('txtemail').style.border="1px solid green";
+                document.getElementById("btnsubmit").disabled = false;
                 }
                 }
                 });
@@ -472,15 +472,46 @@ else
                     Email
                 </td>
                 <td>
-                    <input type="email" name="txtemail" id="txtemail" value="<?php save_state('txtemail'); ?>"/>
+                    <input type="email" name="txtemail" id="txtemail" value="<?php save_state('txtemail'); ?>" onkeyup="chckEmail(this.value)"/>
+                    <span id="msg1"></span>
                 </td>
             </tr>
+            <!-- Username -->
+            <script>
+               //Check if username already exist
+               function chckUsername(value)
+               {
+               $.ajax({
+               type:"POST",
+               url:"checkUsername.php",
+               data:"txtusername="+value,
+               success:function(data)
+               {
+               if(data == "false")
+               {
+               document.getElementById('msg2').innerHTML = "<span class='error'>&#9888; Username Already Existed</span>";
+               document.getElementById('txtusername').style.border="1px solid #FF0000";
+               $("#btnsubmit").prop('disabled', true); // disable button
+
+               }
+               if(data == "true")
+               {
+               document.getElementById('msg2').innerHTML = "<span style='color:green;'>&#x2611; Valid Username</span>";
+               document.getElementById('txtusername').style.border="1px solid green";
+               document.getElementById("btnsubmit").removeAttr('disabled');
+               $("#btnsubmit").prop('disabled', false); // disable button
+               }
+               }
+               });
+               }
+                   </script>
             <tr>
                 <td>
                     Username
                 </td>
                 <td>
-                    <input type="text" name="txtusername" id="txtusername" value="<?php save_state('txtusername'); ?>"/>
+                    <input type="text" name="txtusername" id="txtusername" value="<?php save_state('txtusername'); ?>" onkeyup="chckUsername(this.value)"/>
+                    <span id="msg2"></span>
                 </td>
             </tr>
             <tr>
@@ -499,7 +530,7 @@ else
                     <input type="password" name="txtcpassword" id="txtcpassword" />
                 </td>
             </tr>
-            <?php 
+            <?php
             if($_SERVER['REQUEST_METHOD']=="post")
             {
                 $cpass = trim($_POST['txtcpassword']);
@@ -513,15 +544,17 @@ else
             ?>
             <tr>
                 <td>
-                    <input type="Submit" name="btnsubmit" id="btnsubmit" />
+                    &nbsp;
+                </td>
+                <td>
+                    <input type="Submit" name="btnsubmit" id="btnsubmit" value="Submit"/>
+                    <input type="reset" name="btnreset" id="btnreset" value="Reset"/>
+                </td>
+                <td>
+
                 </td>
             </tr>
-            <?php 
-            // if(empty($error))
-            // {
-            //     echo "<script>alert('1');</script>";
-            // }
-            ?>
+
         </table>
     </form>
 </body>

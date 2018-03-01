@@ -1,11 +1,11 @@
 <?php
     require("includes/connect.php");
 
-    @$email = mysqli_real_escape_string($dbc ,trim($_POST['txtemail']));
+    @$username = mysqli_real_escape_string($dbc ,trim($_POST['txtusername']));
 
-    $qry_chckEmail = "SELECT * FROM tbl_user WHERE e_mail='$email';";
+    $qry_chckusername = "SELECT * FROM tbl_user WHERE username='$username';";
 
-    $qry_run = mysqli_query($dbc, $qry_chckEmail);
+    $qry_run = mysqli_query($dbc, $qry_chckusername);
 
     if($qry_run)
     {
