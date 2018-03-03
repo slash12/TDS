@@ -1,6 +1,6 @@
 <?php
     use PHPMailer\PHPMailer\PHPMailer;
-use PHPMailer\PHPMailer\Exception;
+    use PHPMailer\PHPMailer\Exception;
 
 require('includes/connect.php');
 
@@ -164,8 +164,11 @@ require('includes/connect.php');
 
 ?>
 <body>
-    <h1>Registration Page</h1>
-    <form action="<?php $_SERVER['PHP_SELF'];?>" method="post">
+  <?php
+    require('includes/navbar.php');
+  ?>
+    <h1 class="heading1">Registration Page</h1>
+    <form action="<?php $_SERVER['PHP_SELF'];?>" method="post" id="frmregister">
         <table>
             <tr>
                 <td>
@@ -556,12 +559,12 @@ require('includes/connect.php');
                     <input type="Submit" name="btnsubmit" id="btnsubmit" value="Submit"/>
                     <input type="reset" name="btnreset" id="btnreset" value="Reset"/>
                 </td>
-                <td>
-
-                </td>
             </tr>
-
         </table>
     </form>
+    <br />
 </body>
+<?php
+ require('includes/footer.html');
+?>
 </html>
