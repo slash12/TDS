@@ -163,18 +163,6 @@ footer {
   position: absolute;
   bottom: 0;
   width: 100%
-  /* font-size: 15px; */
-  /* padding: 10px 10px;
-  padding-left: 0.5%;
-  padding-bottom: 0.25%;
-  clear: left;
-  position: fixed;
-  bottom: 0;
-  margin-bottom: 0;
-  width: 50%;
-  height: 10%;;
-  font-size: 15px;
-  height: auto; */
 }
 
 .footer-bottom ul li {
@@ -275,4 +263,11 @@ footer {
     color: #000;
     text-decoration: none;
     cursor: pointer;
+}
+
+#error-validation
+{
+    color: #e57373;
+    font-family: "safety";
+    font-size:15px;
 }

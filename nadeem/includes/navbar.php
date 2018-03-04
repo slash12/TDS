@@ -1,15 +1,44 @@
 
-  <link type="text/css" rel="stylesheet" href="../css/style.css"/>
+  <!-- <link type="text/css" rel="stylesheet" href="../css/style.css"/> -->
+  <?php
+    //require("connect.php");
+  ?>
     <nav>
       <div id="nav-wrapper" class="container">
         <a href="#"></a>
-        <a href="#home" id="logo"><img src="img/logonav.png">ShirtPrints</a>
+        <a href="#home" id="logo"><img src="img/logo_poule.png">ShirtPrints</a>
         <a href="#home" class="link">Browse T-Shirt</a>
         <a href="#home" class="link">Create T-Shirt</a>
-        <a href="#Register" class="creden">Register</a>
+        <a href="Register.php" class="creden">Register</a>
         <a href="#Login" class="creden" id="lgnmodtri">Login</a>
       </div>
     </nav>
+
+<?php
+  if($_SERVER['REQUEST_METHOD'] == 'POST')
+  {
+    //Username Validation
+    $username_cc = trim($_POST['txtusername']);
+    $username = mysqli_real_escape_string($dbc, $username_cc);
+
+    //Password Validation
+    $password_cc = trim($_POST['txtpassword']);
+    $password = mysqli_real_escape_string($dbc, md5($password_cc));
+
+      $login_qry = "SELECT username, password FROM tbl_user WHERE username = '$username' AND password = '$password'";
+      $qry = mysqli_query($dbc, $login_qry);
+      if(mysqli_num_rows($qry)>0)
+      {
+        echo "<script>alert('Success')</script>";
+      }
+      else
+      {
+        $error_details = "Please Enter Appropriate Credentials!";
+        echo "<script>window.onload = function(){modal.style.display = 'block';}</script>";
+      }
+    }
+
+?>
 
     <!-- The Modal -->
 <div id="lgmodal" class="modal">
@@ -27,9 +56,7 @@
           </td>
         </tr>
         <tr>
-          <td>&nbsp;</td>
-          <td>&nbsp;</td>
-          <td><span id="error-validation"></span></td>
+        <td colspan="3"><span id="error-validation"><?php echo @$error_details; ?></span></td>
         </tr>
         <tr>
           <td>
@@ -40,7 +67,7 @@
             Username
           </td>
           <td>
-            <input type="text" name="txtusername" id="txtusername" />
+            <input type="text" name="txtusername" id="txtusername" required/>
         </tr>
         <tr>
           <td>
@@ -52,7 +79,7 @@
             Password
           </td>
           <td>
-            <input type="password" name="txtpassword" id="txtpassword" />
+            <input type="password" name="txtpassword" id="txtpassword" required/>
         </tr>
         <tr>
           <td>
