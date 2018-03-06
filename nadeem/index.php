@@ -10,6 +10,7 @@
       require('includes/navbar.php');
     ?>
   </body>
+  <h1>This is the homePage</h1>
   <?php
     require('includes/footer.html');
   ?>

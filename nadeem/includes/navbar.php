@@ -9,8 +9,19 @@
         <a href="#home" id="logo"><img src="img/logo_poule.png">ShirtPrints</a>
         <a href="#home" class="link">Browse T-Shirt</a>
         <a href="#home" class="link">Create T-Shirt</a>
-        <a href="Register.php" class="creden">Register</a>
-        <a href="#Login" class="creden" id="lgnmodtri">Login</a>
+        <?php
+        session_start();
+        if(!isset($_SESSION['username']))
+        {
+          echo "<a href='Register.php' class='creden'>Register</a>";
+          echo "<a href='#Login' class='creden' id='lgnmodtri'>Login</a>";
+        }
+        else
+        {
+          echo "<a href='../logout.php' class='creden'>Logout</a>";
+          echo "<a href='#' class='creden'>".$_SESSION['username']."</a>";
+        }
+        ?>
       </div>
     </nav>
 
@@ -29,7 +40,9 @@
       $qry = mysqli_query($dbc, $login_qry);
       if(mysqli_num_rows($qry)>0)
       {
-        echo "<script>alert('Success')</script>";
+        session_start();
+        $_SESSION['username'] = $username;
+        header('Location: ../index.php');
       }
       else
       {
