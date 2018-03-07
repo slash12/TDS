@@ -10,7 +10,7 @@
         <a href="#home" class="link">Browse T-Shirt</a>
         <a href="#home" class="link">Create T-Shirt</a>
         <?php
-        session_start();
+        if(!isset($_SESSION)){ session_start();}
         if(!isset($_SESSION['username']))
         {
           echo "<a href='Register.php' class='creden'>Register</a>";
@@ -18,7 +18,7 @@
         }
         else
         {
-          echo "<a href='../logout.php' class='creden'>Logout</a>";
+          echo "<a href='logout.php' class='creden'>Logout</a>";
           echo "<a href='#' class='creden'>".$_SESSION['username']."</a>";
         }
         ?>
@@ -42,7 +42,7 @@
       {
         session_start();
         $_SESSION['username'] = $username;
-        header('Location: ../index.php');
+        //header('Location: ../index.php');
       }
       else
       {
@@ -107,4 +107,4 @@
     </form>
   </div>
 </div>
-<script src="../js/main.js"></script>
+<script src="js/main.js"></script>

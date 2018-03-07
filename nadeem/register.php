@@ -137,7 +137,7 @@ require('includes/connect.php');
                 $mail->setFrom('testappui357@gmail.com', 'Nadda');
                 $mail->addAddress($email, 'User');
                 $mail->isHTML(true);                                  // Set email format to HTML
-                $mail->Subject = 'Here is the subject';
+                $mail->Subject = 'ShirtPrints E-mail Verification';
                 $mail->Body    = "
                 Please Click on the link below: <br><br>
                 <a href=\"http://localhost:8001/dissertation_scratch/tds/nadeem/emailVerified.php?email=$email&token=$token\">Click Here</a>
