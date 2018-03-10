@@ -10,11 +10,15 @@
         <a href="#home" class="link">Browse T-Shirt</a>
         <a href="#home" class="link">Create T-Shirt</a>
         <?php
-        if(!isset($_SESSION)){ session_start();}
+        if(!isset($_SESSION))
+        {
+          session_start();
+        }
         if(!isset($_SESSION['username']))
         {
           echo "<a href='Register.php' class='creden'>Register</a>";
           echo "<a href='#Login' class='creden' id='lgnmodtri'>Login</a>";
+          echo "<script src='js/main.js'></script>";
         }
         else
         {
@@ -26,7 +30,7 @@
     </nav>
 
 <?php
-  if($_SERVER['REQUEST_METHOD'] == 'POST')
+  if(isset($_POST['btnlgsubmit']))
   {
     //Username Validation
     $username_cc = trim($_POST['txtusername']);
@@ -107,4 +111,3 @@
     </form>
   </div>
 </div>
-<script src="js/main.js"></script>

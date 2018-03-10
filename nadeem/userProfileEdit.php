@@ -1,18 +1,17 @@
 <?php
   require('includes/connect.php');
 
-
-  //Fetching info about user in db
+  //Check if session has started
   if(!isset($_SESSION))
   {
     session_start();
   }
 
   @$username = $_SESSION['username'];
-  //echo "<script> alert('".$username."')</script>";
 
 if(isset($username))
 {
+  //Fetching info about user in db
     $user_qry = "SELECT * FROM tbl_user WHERE username= '$username'";
     $user_qry_exe = mysqli_query($dbc, $user_qry);
     if($user_qry_exe)
@@ -40,47 +39,68 @@ if(isset($username))
       $folder="img/upload/";
       $target_file = $folder . basename($_FILES["upload_file"]["name"][0]);
       $imageFileType = pathinfo($target_file, PATHINFO_EXTENSION);
-      $imgcheck = true;
+      // $imgcheck = true;
 
 /*---------------------Image Validation-----------------------------*/
                $b = "Sorry, only JPG, JPEG & PNG files are allowed.";
                $a = "Sorry, your image is too large.";
 
+               echo $_FILES["upload_file"]["size"][0];
                //Image > 500KB result in error
                if ($_FILES["upload_file"]["size"][0] > 500000)
                {
-                echo $a;
+                 echo $a;
                 $imgcheck = false;
-                echo $_FILES["upload_file"]["size"][0];
+                echo $imgcheck;
                }
 
                // Allow certain file formats
                if($imageFileType == "jpg" || $imageFileType == "png" || $imageFileType == "jpeg")
                {
-                //echo $imageFileType;
+                 $imgcheck = "true";
                }
                else
                {
-                //echo $b;
                 $imgcheck = false;
                }
+
+               //echo $imgcheck;
 
                if($imgcheck)
                {
 
                  if(file_exists($user_data['img_path']))
                  {
+                   //Delete old img
                    unlink($user_data['img_path']);
                    echo "<script> alert('Old img delete success')</script>";
                  }
                  else
                  {
                    echo "<script> alert('img does not exist')</script>";
-                   echo $target_file;
+                   //echo $target_file;
                  }
 
                  move_uploaded_file($_FILES["upload_file"]["tmp_name"][0], "$folder".$username."_".$_FILES["upload_file"]["name"][0]);
-                 //$update_img = "";
+
+                 $target_file_final = $folder.$username."_".$_FILES["upload_file"]["name"][0];
+
+                 //Adding the new image to the db
+                 $update_img = "UPDATE tbl_user SET img_path = '$target_file_final' WHERE username='".$user_data['username']."';";
+                 $update_img_exe = mysqli_query($dbc, $update_img);
+
+                 if($update_img_exe)
+                 {
+                   echo "<script> alert('img_path updated') </script>";
+                   // header('Location: userProfileEdit.php');
+                   echo $imgcheck."<br>";
+                   //echo $_FILES["upload_file"]["size"][0];
+                 }
+                 else
+                 {
+                   echo "<script> alert('img_path not updated') </script>";
+                 }
+
                  echo "<script> alert('Upload img success'".$target_file.")</script>";
 
                }
